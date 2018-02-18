@@ -2,8 +2,8 @@ from distutils.core import setup, Extension
 from Cython.Distutils import build_ext
 import numpy
 
-libdr = ['/usr/local/lib']
-incdr = [numpy.get_include(), '/usr/local/include/']
+libdr = ['/usr/local/lib', '/home/yagi/opencv2/lib']
+incdr = [numpy.get_include(), '/usr/local/include/', '/home/yagi/opencv2/include/']
 
 ext = [
 	Extension('cvt', ['python/cvt.pyx'], 

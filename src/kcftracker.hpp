@@ -92,13 +92,17 @@ class KCFTracker : public Tracker
 {
 public:
     // Constructor
-    KCFTracker(bool hog = true, bool fixed_window = true, bool multiscale = true, bool lab = true);
+    KCFTracker(bool hog = true, bool fixed_window = true, bool multiscale = true, bool lab = true, float interp_factor_ = 0.02);
 
-    // Initialize tracker 
+    // Initialize tracker
     virtual void init(const cv::Rect &roi, cv::Mat image);
-    
+
     // Update position based on the new frame
     virtual cv::Rect update(cv::Mat image);
+
+    // Train tracker with the correct RoI
+    virtual void reTrain(cv::Mat image);
+    virtual void correct(cv::Mat image, const cv::Rect &roi);
 
     float interp_factor; // linear interpolation factor for adaptation
     float sigma; // gaussian kernel bandwidth
@@ -125,7 +129,7 @@ protected:
     cv::Mat createGaussianPeak(int sizey, int sizex);
 
     // Obtain sub-window from image, with replication-padding and extract features
-    cv::Mat getFeatures(const cv::Mat & image, bool inithann, float scale_adjust = 1.0f);
+    cv::Mat getFeatures(const cv::Mat & image, const cv::Rect & roi, bool inithann, float scale_adjust = 1.0f);
 
     // Initialize Hanning window. Function called only in the first frame.
     void createHanningMats();
@@ -136,8 +140,6 @@ protected:
     cv::Mat _alphaf;
     cv::Mat _prob;
     cv::Mat _tmpl;
-    cv::Mat _num;
-    cv::Mat _den;
     cv::Mat _labCentroids;
 
 private:
